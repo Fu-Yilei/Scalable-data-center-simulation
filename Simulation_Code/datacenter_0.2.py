@@ -70,7 +70,13 @@ for i in range(int(4*(K/2)**2)):
     _eh.ip.ip_2 = int((i%4)/2) #current switch
     _eh.ip.ip_3 = int(2+i%(K/2))
     end_hosts.append(_eh)
-    print("End Host Name: \""+ str(_eh.name)+"\", Host IP:", str(_eh.ip.ip_0)+"."+str(_eh.ip.ip_1)+"."+str(_eh.ip.ip_2)+"."+str(_eh.ip.ip_3))
+    print("End Host Name: \""
+          + str(_eh.name)+
+          "\", Host IP:",
+          str(_eh.ip.ip_0)+
+          "."+str(_eh.ip.ip_1)+
+          "."+str(_eh.ip.ip_2)+
+          "."+str(_eh.ip.ip_3))
 print()
 
 switchs = []
@@ -82,7 +88,13 @@ for i in range(K*4):
     _ps.ip.ip_2 = i%4
     _ps.ip.ip_3 = 1
     switchs.append(_ps)
-    print("Pod Switch Name: \""+ str(_ps.name)+"\", Host IP:", str(_ps.ip.ip_0)+"."+str(_ps.ip.ip_1)+"."+str(_ps.ip.ip_2)+"."+str(_ps.ip.ip_3))
+    print("Pod Switch Name: \""+ 
+          str(_ps.name)+
+          "\", Host IP:",
+          str(_ps.ip.ip_0)+
+          "."+str(_ps.ip.ip_1)+
+          "."+str(_ps.ip.ip_2)+
+          "."+str(_ps.ip.ip_3))
 print()
 
 core_switchs = []
@@ -94,7 +106,13 @@ for i in range(int((K/2)**2)):
     _cs.ip.ip_2 = 1+int(i/(K/2))
     _cs.ip.ip_3 = 1+int(i%(K/2))
     core_switchs.append(_cs)
-    print("Core Switch Name: \""+ str(_cs.name)+"\", Switch IP:", str(_cs.ip.ip_0)+"."+str(_cs.ip.ip_1)+"."+str(_cs.ip.ip_2)+"."+str(_cs.ip.ip_3))
+    print("Core Switch Name: \""+
+          str(_cs.name)+
+          "\", Switch IP:",
+          str(_cs.ip.ip_0)+
+          "."+str(_cs.ip.ip_1)+
+          "."+str(_cs.ip.ip_2)+
+          "."+str(_cs.ip.ip_3))
 print()
 
 #=================================================  
@@ -102,11 +120,11 @@ print()
 
 #Lower Pod Switch Table
 lower_pod_tables = []
-_lpt = Routing_table()
 print("Lower Pod Switches Routing Table:")
 print("Pod Switch Address | Prefix/Suffix | Port")
 for x in range(0,K):
     for z in range(int(K/2)):
+        _lpt = Routing_table()
         _lpt.PrefixTable.SwitchAdress.ip_0 = 10
         _lpt.PrefixTable.SwitchAdress.ip_1 = x
         _lpt.PrefixTable.SwitchAdress.ip_2 = z
@@ -117,7 +135,15 @@ for x in range(0,K):
         _lpt.PrefixTable.prefix.ip_3 = 0
         _lpt.PrefixTable.port = 0
         lower_pod_tables.append(_lpt)
-        print("      "+str(_lpt.PrefixTable.SwitchAdress.ip_0)+"."+str(_lpt.PrefixTable.SwitchAdress.ip_1)+"."+str(_lpt.PrefixTable.SwitchAdress.ip_2)+"."+str(_lpt.PrefixTable.SwitchAdress.ip_3)+" |  "+str(_lpt.PrefixTable.prefix.ip_0)+"."+str(_lpt.PrefixTable.prefix.ip_1)+"."+str(_lpt.PrefixTable.prefix.ip_2)+"."+str(_lpt.PrefixTable.prefix.ip_3)+" | "+str(_lpt.PrefixTable.port))
+        print("      "+str(_lpt.PrefixTable.SwitchAdress.ip_0)+
+              "."+str(_lpt.PrefixTable.SwitchAdress.ip_1)+
+              "."+str(_lpt.PrefixTable.SwitchAdress.ip_2)+
+              "."+str(_lpt.PrefixTable.SwitchAdress.ip_3)+
+              " |  "+str(_lpt.PrefixTable.prefix.ip_0)+
+              "."+str(_lpt.PrefixTable.prefix.ip_1)+
+              "."+str(_lpt.PrefixTable.prefix.ip_2)+
+              "."+str(_lpt.PrefixTable.prefix.ip_3)+
+              " | "+str(_lpt.PrefixTable.port))
         
         for i in range(2,int(K/2+2)):
             _lpt.SuffixTable.SwitchAdress.ip_0 = 10
@@ -130,17 +156,25 @@ for x in range(0,K):
             _lpt.SuffixTable.suffix.ip_3 = i
             _lpt.SuffixTable.port = int((i-2+z)%(K/2)+(K/2))
             lower_pod_tables.append(_lpt)
-            print("      "+str(_lpt.SuffixTable.SwitchAdress.ip_0)+"."+str(_lpt.SuffixTable.SwitchAdress.ip_1)+"."+str(_lpt.SuffixTable.SwitchAdress.ip_2)+"."+str(_lpt.SuffixTable.SwitchAdress.ip_3)+" |  "+str(_lpt.SuffixTable.suffix.ip_0)+"."+str(_lpt.SuffixTable.suffix.ip_1)+"."+str(_lpt.SuffixTable.suffix.ip_2)+"."+str(_lpt.SuffixTable.suffix.ip_3)+" | "+str(_lpt.SuffixTable.port))
+            print("      "+str(_lpt.SuffixTable.SwitchAdress.ip_0)+
+                  "."+str(_lpt.SuffixTable.SwitchAdress.ip_1)+
+                  "."+str(_lpt.SuffixTable.SwitchAdress.ip_2)+
+                  "."+str(_lpt.SuffixTable.SwitchAdress.ip_3)+
+                  " |  "+str(_lpt.SuffixTable.suffix.ip_0)+
+                  "."+str(_lpt.SuffixTable.suffix.ip_1)+
+                  "."+str(_lpt.SuffixTable.suffix.ip_2)+
+                  "."+str(_lpt.SuffixTable.suffix.ip_3)+
+                  " | "+str(_lpt.SuffixTable.port))
 print()
 
 #Upper Pod Switch Table
 upper_pod_tables = []
-_upt = Routing_table()
 print("Upper Pod Switches Routing Table:")
 print("Pod Switch Address | Prefix/Suffix | Port")
 for x in range(0,K):
     for z in range(int(K/2),K):
         for i in range(0,int(K/2)):
+            _upt = Routing_table()
             _upt.PrefixTable.SwitchAdress.ip_0 = 10
             _upt.PrefixTable.SwitchAdress.ip_1 = x
             _upt.PrefixTable.SwitchAdress.ip_2 = z
@@ -151,7 +185,15 @@ for x in range(0,K):
             _upt.PrefixTable.prefix.ip_3 = 0
             _upt.PrefixTable.port = i
             upper_pod_tables.append(_upt)
-            print("      "+str(_upt.PrefixTable.SwitchAdress.ip_0)+"."+str(_upt.PrefixTable.SwitchAdress.ip_1)+"."+str(_upt.PrefixTable.SwitchAdress.ip_2)+"."+str(_upt.PrefixTable.SwitchAdress.ip_3)+" | "+str(_upt.PrefixTable.prefix.ip_0)+"."+str(_upt.PrefixTable.prefix.ip_1)+"."+str(_upt.PrefixTable.prefix.ip_2)+"."+str(_upt.PrefixTable.prefix.ip_3)+" | "+str(_upt.PrefixTable.port))
+            print("      "+str(_upt.PrefixTable.SwitchAdress.ip_0)+
+                  "."+str(_upt.PrefixTable.SwitchAdress.ip_1)+
+                  "."+str(_upt.PrefixTable.SwitchAdress.ip_2)+
+                  "."+str(_upt.PrefixTable.SwitchAdress.ip_3)+
+                  " | "+str(_upt.PrefixTable.prefix.ip_0)+
+                  "."+str(_upt.PrefixTable.prefix.ip_1)+
+                  "."+str(_upt.PrefixTable.prefix.ip_2)+
+                  "."+str(_upt.PrefixTable.prefix.ip_3)+
+                  " | "+str(_upt.PrefixTable.port))
         
         _upt.PrefixTable.SwitchAdress.ip_0 = 10
         _upt.PrefixTable.SwitchAdress.ip_1 = x
@@ -163,9 +205,19 @@ for x in range(0,K):
         _upt.PrefixTable.prefix.ip_3 = 0
         _upt.PrefixTable.port = 0
         upper_pod_tables.append(_upt)
-        print("      "+str(_upt.PrefixTable.SwitchAdress.ip_0)+"."+str(_upt.PrefixTable.SwitchAdress.ip_1)+"."+str(_upt.PrefixTable.SwitchAdress.ip_2)+"."+str(_upt.PrefixTable.SwitchAdress.ip_3)+" |  "+str(_upt.PrefixTable.prefix.ip_0)+"."+str(_upt.PrefixTable.prefix.ip_1)+"."+str(_upt.PrefixTable.prefix.ip_2)+"."+str(_upt.PrefixTable.prefix.ip_3)+" | "+str(_upt.PrefixTable.port))
+        print("      "+str(_upt.PrefixTable.SwitchAdress.ip_0)+
+              "."+str(_upt.PrefixTable.SwitchAdress.ip_1)+
+              "."+str(_upt.PrefixTable.SwitchAdress.ip_2)+
+              "."+str(_upt.PrefixTable.SwitchAdress.ip_3)+
+              " |  "+
+              str(_upt.PrefixTable.prefix.ip_0)+
+              "."+str(_upt.PrefixTable.prefix.ip_1)+
+              "."+str(_upt.PrefixTable.prefix.ip_2)+
+              "."+str(_upt.PrefixTable.prefix.ip_3)+
+              " | "+str(_upt.PrefixTable.port))
         
         for i in range(2,int(K/2+2)):
+            _upt = Routing_table()
             _upt.SuffixTable.SwitchAdress.ip_0 = 10
             _upt.SuffixTable.SwitchAdress.ip_1 = x
             _upt.SuffixTable.SwitchAdress.ip_2 = z
@@ -176,7 +228,15 @@ for x in range(0,K):
             _upt.SuffixTable.suffix.ip_3 = i
             _upt.SuffixTable.port = int((i-2+z)%(K/2)+(K/2))
             upper_pod_tables.append(_upt)
-            print("      "+str(_upt.SuffixTable.SwitchAdress.ip_0)+"."+str(_upt.SuffixTable.SwitchAdress.ip_1)+"."+str(_upt.SuffixTable.SwitchAdress.ip_2)+"."+str(_upt.SuffixTable.SwitchAdress.ip_3)+" |  "+str(_upt.SuffixTable.suffix.ip_0)+"."+str(_upt.SuffixTable.suffix.ip_1)+"."+str(_upt.SuffixTable.suffix.ip_2)+"."+str(_upt.SuffixTable.suffix.ip_3)+" | "+str(_upt.SuffixTable.port))
+            print("      "+str(_upt.SuffixTable.SwitchAdress.ip_0)+
+                  "."+str(_upt.SuffixTable.SwitchAdress.ip_1)+
+                  "."+str(_upt.SuffixTable.SwitchAdress.ip_2)+
+                  "."+str(_upt.SuffixTable.SwitchAdress.ip_3)+
+                  " |  "+str(_upt.SuffixTable.suffix.ip_0)+
+                  "."+str(_upt.SuffixTable.suffix.ip_1)+
+                  "."+str(_upt.SuffixTable.suffix.ip_2)+
+                  "."+str(_upt.SuffixTable.suffix.ip_3)+
+                  " | "+str(_upt.SuffixTable.port))
 print()
 
 #Core Swich Table
@@ -187,6 +247,7 @@ print("Core Switch Address | Prefix | Port")
 for j in range(1,int(K/2+1)):
     for i in range(1,int(K/2+1)):
         for x in range(K):
+            _ct = Prefix_structure()
             _ct.SwitchAdress.ip_0 = 10
             _ct.SwitchAdress.ip_1 = K
             _ct.SwitchAdress.ip_2 = j
@@ -196,7 +257,16 @@ for j in range(1,int(K/2+1)):
             _ct.prefix.ip_2 = 0
             _ct.prefix.ip_3 = 0
             _ct.port = x
-            print("      "+str(_ct.SwitchAdress.ip_0)+"."+str(_ct.SwitchAdress.ip_1)+"."+str(_ct.SwitchAdress.ip_2)+"."+str(_ct.SwitchAdress.ip_3)+" | "+str(_ct.prefix.ip_0)+"."+str(_ct.prefix.ip_1)+"."+str(_ct.prefix.ip_2)+"."+str(_ct.prefix.ip_3)+" | "+str(_ct.port))
+            core_tables.append(_ct)
+            print("      "+str(_ct.SwitchAdress.ip_0)+
+                  "."+str(_ct.SwitchAdress.ip_1)+
+                  "."+str(_ct.SwitchAdress.ip_2)+
+                  "."+str(_ct.SwitchAdress.ip_3)+
+                  " | "+str(_ct.prefix.ip_0)+
+                  "."+str(_ct.prefix.ip_1)+
+                  "."+str(_ct.prefix.ip_2)+
+                  "."+str(_ct.prefix.ip_3)+
+                  " | "+str(_ct.port))
 print()
 
 #==========================================
@@ -218,16 +288,30 @@ Destination_Host_IP.ip_0 = 3
 for i in range(K*4):
     if switchs[i].ip.ip_1 == Source_Host_IP.ip_1 and switchs[i].ip.ip_2 == Source_Host_IP.ip_2:
         switchs[i].state = 1
-        print(str(switchs[i].ip.ip_0)+"."+str(switchs[i].ip.ip_1)+"."+str(switchs[i].ip.ip_2)+"."+str(switchs[i].ip.ip_3))
+        print(str(switchs[i].ip.ip_0)+
+              "."+str(switchs[i].ip.ip_1)+
+              "."+str(switchs[i].ip.ip_2)+
+              "."+str(switchs[i].ip.ip_3))
 
 #Step 2 Serious problem:lower_pod_tables刚产生的时候还好好的，要查询的时候之前的数据就没了。。表现见最后打印的表，没找到问题在哪。。
 print(lower_pod_tables[2].SuffixTable.SwitchAdress.ip_2)
 for n in range(K*4):
     if switchs[n].state == 1:
-#        print(str(switchs[n].ip.ip_0)+"."+str(switchs[n].ip.ip_1)+"."+str(switchs[n].ip.ip_2)+"."+str(switchs[n].ip.ip_3))        
+        print(str(switchs[n].ip.ip_0)+
+              "."+str(switchs[n].ip.ip_1)+
+              "."+str(switchs[n].ip.ip_2)+
+              "."+str(switchs[n].ip.ip_3))        
         for i in range(len(lower_pod_tables)):
-            #print("      "+str(lower_pod_tables[i].SuffixTable.SwitchAdress.ip_0)+"."+str(lower_pod_tables[i].SuffixTable.SwitchAdress.ip_1)+"."+str(lower_pod_tables[i].SuffixTable.SwitchAdress.ip_2)+"."+str(lower_pod_tables[i].SuffixTable.SwitchAdress.ip_3)+" |  "+str(lower_pod_tables[i].SuffixTable.suffix.ip_0)+"."+str(lower_pod_tables[i].SuffixTable.suffix.ip_1)+"."+str(lower_pod_tables[i].SuffixTable.suffix.ip_2)+"."+str(lower_pod_tables[i].SuffixTable.suffix.ip_3)+" | "+str(lower_pod_tables[i].SuffixTable.port))
-            #print(lower_pod_tables[i].SuffixTable.SwitchAdress.ip_1)
+            print("      "+str(lower_pod_tables[i].SuffixTable.SwitchAdress.ip_0)+
+                  "."+str(lower_pod_tables[i].SuffixTable.SwitchAdress.ip_1)+
+                  "."+str(lower_pod_tables[i].SuffixTable.SwitchAdress.ip_2)+
+                  "."+str(lower_pod_tables[i].SuffixTable.SwitchAdress.ip_3)+
+                  " |  "+str(lower_pod_tables[i].SuffixTable.suffix.ip_0)+
+                  "."+str(lower_pod_tables[i].SuffixTable.suffix.ip_1)+
+                  "."+str(lower_pod_tables[i].SuffixTable.suffix.ip_2)+
+                  "."+str(lower_pod_tables[i].SuffixTable.suffix.ip_3)+
+                  " | "+str(lower_pod_tables[i].SuffixTable.port))
+            print(lower_pod_tables[i].SuffixTable.SwitchAdress.ip_1)
             if switchs[n].ip.ip_1 == lower_pod_tables[i].SuffixTable.SwitchAdress.ip_1 and switchs[n].ip.ip_2 == lower_pod_tables[i].SuffixTable.SwitchAdress.ip_2:
                 for m in range(K*4):
                     if switchs[m].ip.ip_2 == lower_pod_tables[i].PrefixTable.port:
