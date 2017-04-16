@@ -295,13 +295,16 @@ for i in range(K*4):
               "."+str(switchs[i].ip.ip_3))
 
 #Step 2 
-print(lower_pod_tables[2].SuffixTable.SwitchAdress.ip_2)
+#print(lower_pod_tables[2].SuffixTable.SwitchAdress.ip_2)
+exit_flag = False
 for n in range(K*4):
     if switchs[n].state == 1:
+        '''
         print(str(switchs[n].ip.ip_0)+
               "."+str(switchs[n].ip.ip_1)+
               "."+str(switchs[n].ip.ip_2)+
-              "."+str(switchs[n].ip.ip_3))        
+              "."+str(switchs[n].ip.ip_3))  
+        '''
         for i in range(len(lower_pod_tables)):
             '''
             print("      "+str(lower_pod_tables[i].SuffixTable.SwitchAdress.ip_0)+
@@ -318,9 +321,15 @@ for n in range(K*4):
             if switchs[n].ip.ip_1 == lower_pod_tables[i].SuffixTable.SwitchAdress.ip_1 \
             and switchs[n].ip.ip_2 == lower_pod_tables[i].SuffixTable.SwitchAdress.ip_2:
                 for m in range(K*4):
-                    if switchs[m].ip.ip_2 == lower_pod_tables[i].PrefixTable.port:
+                    if switchs[m].ip.ip_2 == lower_pod_tables[i].SuffixTable.port \
+                    and switchs[m].ip.ip_1 == lower_pod_tables[i].SuffixTable.SwitchAdress.ip_1:
                         switchs[m].state = 2
                         print(str(switchs[m].ip.ip_0)+
                               "."+str(switchs[m].ip.ip_1)+
                               "."+str(switchs[m].ip.ip_2)+
                               "."+str(switchs[m].ip.ip_3))
+                        exit_flag = True
+                        break
+            if exit_flag == True:
+                break
+#Step3
