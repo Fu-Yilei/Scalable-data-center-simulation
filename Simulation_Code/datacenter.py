@@ -68,3 +68,5 @@ for i in range(int((K/2)**2)):
     _cs.ip.ip_3 = 1+int(i%(K/2))
     core_switchs.append(_cs)
     print("Core Switch Name: \""+ str(_cs.name)+"\", Switch IP:", str(_cs.ip.ip_0)+"."+str(_cs.ip.ip_1)+"."+str(_cs.ip.ip_2)+"."+str(_cs.ip.ip_3))
+
+
