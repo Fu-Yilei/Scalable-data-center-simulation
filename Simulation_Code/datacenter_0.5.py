@@ -53,6 +53,15 @@ class Pod_Switch_Structure:
         self.ip = IP_Address()
         self.state = 0
 
+class Flow_Header:
+    def __init__(self):
+        self.souce = IP_Address()
+        self.destination = IP_Address()
+        self.routingresult = []
+        self.size = 0
+        self.sentport = 0
+        self.sentflag = False
+
 '''        
 class Port_To_Address_table:
     def __init__(self):
@@ -276,32 +285,37 @@ print()
 #==========================================
 #Routing Simulation
 
-Source_Host_IP = IP_Address()
-Source_Host_IP.ip_0 = 10
-Source_Host_IP.ip_1 = 2
-Source_Host_IP.ip_2 = 0
-Source_Host_IP.ip_3 = 3
-Destination_Host_IP = IP_Address()
-Destination_Host_IP.ip_0 = 10
-Destination_Host_IP.ip_1 = 2
-Destination_Host_IP.ip_2 = 1
-Destination_Host_IP.ip_3 = 3
-
-def Step1():
+Source_Host_IP_Example = IP_Address()
+Source_Host_IP_Example.ip_0 = 10
+Source_Host_IP_Example.ip_1 = 2
+Source_Host_IP_Example.ip_2 = 0
+Source_Host_IP_Example.ip_3 = 3
+Destination_Host_IP_Example = IP_Address()
+Destination_Host_IP_Example.ip_0 = 10
+Destination_Host_IP_Example.ip_1 = 2
+Destination_Host_IP_Example.ip_2 = 1
+Destination_Host_IP_Example.ip_3 = 3
+Routing_Path = []
+Port_Path = []
+def Step1(Source_Host_IP):
     #Step 1
     for i in range(K*4):
         if switchs[i].ip.ip_1 == Source_Host_IP.ip_1 \
         and switchs[i].ip.ip_2 == Source_Host_IP.ip_2:
             switchs[i].state = 1
+            Routing_Path.append(switchs[i])
+            Port_Path.append(switchs[i].ip.ip_2)
             print(str(switchs[i].ip.ip_0)+
                   "."+str(switchs[i].ip.ip_1)+
                   "."+str(switchs[i].ip.ip_2)+
-                  "."+str(switchs[i].ip.ip_3))
+                  "."+str(switchs[i].ip.ip_3)+
+                  " Port:", switchs[i].ip.ip_2)
             return
+    return
 
 #Step 2 
 #print(lower_pod_tables[2].SuffixTable.SwitchAdress.ip_2)
-def Step2():
+def Step2(Destination_Host_IP):
     for n in range(K*4):
         if switchs[n].state == 1:
 
@@ -314,33 +328,21 @@ def Step2():
                         if switchs[m].ip.ip_2 == lower_pod_tables[i].SuffixTable.port \
                         and switchs[m].ip.ip_1 == lower_pod_tables[i].SuffixTable.SwitchAdress.ip_1:
                             switchs[m].state = 2
+                            Routing_Path.append(switchs[m])
+                            Port_Path.append(switchs[i].ip.ip_2)
                             print(str(switchs[m].ip.ip_0)+
                                   "."+str(switchs[m].ip.ip_1)+
                                   "."+str(switchs[m].ip.ip_2)+
-                                  "."+str(switchs[m].ip.ip_3))
+                                  "."+str(switchs[m].ip.ip_3)+
+                                  " Port:", lower_pod_tables[i].SuffixTable.port)
                             return
+    return
 
 
 #Step3
-def Step3():
+def Step3(Destination_Host_IP):
     for n in range(K*4):
         if switchs[n].state == 2:
-            for i in range(len(upper_pod_tables_suffix)):
-                #nt(switchs[n].ip.ip_1 , upper_pod_tables_suffix[i].SuffixTable.SwitchAdress.ip_1, switchs[n].ip.ip_2, upper_pod_tables_suffix[i].SuffixTable.SwitchAdress.ip_2,Destination_Host_IP.ip_3 ,upper_pod_tables_suffix[i].SuffixTable.suffix.ip_3)
-                
-                if switchs[n].ip.ip_1 == upper_pod_tables_suffix[i].SuffixTable.SwitchAdress.ip_1 \
-                and switchs[n].ip.ip_2 == upper_pod_tables_suffix[i].SuffixTable.SwitchAdress.ip_2\
-                and Destination_Host_IP.ip_3 == upper_pod_tables_suffix[i].SuffixTable.suffix.ip_3:
-                    for m in range(int((K/2)**2)):
-                        #print(core_switchs[m].ip.ip_2, upper_pod_tables_suffix[i].SuffixTable.SwitchAdress.ip_2 -1)
-                        if core_switchs[m].ip.ip_2 == upper_pod_tables_suffix[i].SuffixTable.SwitchAdress.ip_2 -1 \
-                        and core_switchs[m].ip.ip_3 == upper_pod_tables_suffix[i].SuffixTable.port -1:                   
-                            core_switchs[m].state = 3
-                            print(str(core_switchs[m].ip.ip_0)+
-                                  "."+str(core_switchs[m].ip.ip_1)+
-                                  "."+str(core_switchs[m].ip.ip_2)+
-                                  "."+str(core_switchs[m].ip.ip_3))  
-                            return
             for i in range(len(upper_pod_tables_prefix)):                
                 if switchs[n].ip.ip_1 == upper_pod_tables_prefix[i].PrefixTable.SwitchAdress.ip_1 \
                 and switchs[n].ip.ip_2 == upper_pod_tables_prefix[i].PrefixTable.SwitchAdress.ip_2\
@@ -348,18 +350,41 @@ def Step3():
                     for p in range(K*4):
                         if switchs[p].ip.ip_2 == upper_pod_tables_prefix[i].PrefixTable.port \
                         and switchs[p].ip.ip_1 == upper_pod_tables_prefix[i].PrefixTable.SwitchAdress.ip_1:
-                            switchs[p].state = 3
+                            switchs[p].state = 4
+                            '''
+                            Routing_Path.append(switchs[p])
+                            Port_Path.append(switchs[p].ip.ip_2)
                             print(str(switchs[p].ip.ip_0)+
                                   "."+str(switchs[p].ip.ip_1)+
                                   "."+str(switchs[p].ip.ip_2)+
-                                  "."+str(switchs[p].ip.ip_3))
+                                  "."+str(switchs[p].ip.ip_3)+
+                                  "Port:", upper_pod_tables_prefix[i].PrefixTable.port)
+                            return'''
+                            Step5(Destination_Host_IP)
+            for i in range(len(upper_pod_tables_suffix)):                
+                if switchs[n].ip.ip_1 == upper_pod_tables_suffix[i].SuffixTable.SwitchAdress.ip_1 \
+                and switchs[n].ip.ip_2 == upper_pod_tables_suffix[i].SuffixTable.SwitchAdress.ip_2\
+                and Destination_Host_IP.ip_3 == upper_pod_tables_suffix[i].SuffixTable.suffix.ip_3:
+                    for m in range(int((K/2)**2)):
+                        #print(core_switchs[m].ip.ip_2, upper_pod_tables_suffix[i].SuffixTable.SwitchAdress.ip_2 -1)
+                        if core_switchs[m].ip.ip_2 == upper_pod_tables_suffix[i].SuffixTable.SwitchAdress.ip_2 -1 \
+                        and core_switchs[m].ip.ip_3 == upper_pod_tables_suffix[i].SuffixTable.port -1:           
+                            core_switchs[m].state = 3
+                            Routing_Path.append(switchs[m])
+                            Port_Path.append(switchs[m].ip.ip_2)
+                            print(str(core_switchs[m].ip.ip_0)+
+                                  "."+str(core_switchs[m].ip.ip_1)+
+                                  "."+str(core_switchs[m].ip.ip_2)+
+                                  "."+str(core_switchs[m].ip.ip_3)+
+                                  " Port:", upper_pod_tables_suffix[i].SuffixTable.port)  
                             return
+
+    return
                            
-def Step4():
+def Step4(Destination_Host_IP):
     for n in range(int((K/2)**2)):
         if core_switchs[n].state == 3:
             for i in range(len(core_tables)):
-                #print(core_switchs[n].ip.ip_2 , core_tables[i].SwitchAdress.ip_2,core_switchs[n].ip.ip_3 , core_tables[i].SwitchAdress.ip_3,Destination_Host_IP.ip_1 , core_tables[i].prefix.ip_1)
                 if core_switchs[n].ip.ip_2 == core_tables[i].SwitchAdress.ip_2 \
                 and core_switchs[n].ip.ip_3 == core_tables[i].SwitchAdress.ip_3\
                 and Destination_Host_IP.ip_1 == core_tables[i].prefix.ip_1:
@@ -368,16 +393,19 @@ def Step4():
                         if switchs[p].ip.ip_1 == core_tables[i].port \
                         and switchs[p].ip.ip_2 == core_tables[i].SwitchAdress.ip_2 +1:
                             switchs[p].state = 4
+                            Routing_Path.append(switchs[p])
+                            Port_Path.append(switchs[p].ip.ip_2)
                             print(str(switchs[p].ip.ip_0)+
                                   "."+str(switchs[p].ip.ip_1)+
                                   "."+str(switchs[p].ip.ip_2)+
-                                  "."+str(switchs[p].ip.ip_3))
+                                  "."+str(switchs[p].ip.ip_3)+
+                                  " Port:", core_tables[i].port)
                             return   
+    return
                     
-def Step5():
+def Step5(Destination_Host_IP):
     for n in range(K*4):
         if switchs[n].state == 4:
-            
             for i in range(len(upper_pod_tables_suffix)):                
                 if switchs[n].ip.ip_1 == upper_pod_tables_suffix[i].SuffixTable.SwitchAdress.ip_1 \
                 and switchs[n].ip.ip_2 == upper_pod_tables_suffix[i].SuffixTable.SwitchAdress.ip_2\
@@ -387,10 +415,13 @@ def Step5():
                         if core_switchs[m].ip.ip_2 == upper_pod_tables_suffix[i].SuffixTable.SwitchAdress.ip_2 -1 \
                         and core_switchs[m].ip.ip_3 == upper_pod_tables_suffix[i].SuffixTable.port -1:                   
                             core_switchs[m].state = 5
+                            Routing_Path.append(switchs[m])
+                            Port_Path.append(switchs[m].ip.ip_2)
                             print(str(core_switchs[m].ip.ip_0)+
                                   "."+str(core_switchs[m].ip.ip_1)+
                                   "."+str(core_switchs[m].ip.ip_2)+
-                                  "."+str(core_switchs[m].ip.ip_3))  
+                                  "."+str(core_switchs[m].ip.ip_3)+
+                                  " Port:", upper_pod_tables_suffix[i].SuffixTable.port)  
                             return
                             
             for i in range(len(upper_pod_tables_prefix)):                
@@ -401,17 +432,126 @@ def Step5():
                         if switchs[p].ip.ip_2 == upper_pod_tables_prefix[i].PrefixTable.port \
                         and switchs[p].ip.ip_1 == upper_pod_tables_prefix[i].PrefixTable.SwitchAdress.ip_1:
                             switchs[p].state = 5
+                            Routing_Path.append(switchs[p])
+                            Port_Path.append(switchs[p].ip.ip_2)
                             print(str(switchs[p].ip.ip_0)+
                                   "."+str(switchs[p].ip.ip_1)+
                                   "."+str(switchs[p].ip.ip_2)+
-                                  "."+str(switchs[p].ip.ip_3))
+                                  "."+str(switchs[p].ip.ip_3)+
+                                  " Port:", upper_pod_tables_prefix[i].PrefixTable.port)
                             return
+    return
 
-print("Source_Host_IP: "+str(Source_Host_IP.ip_0)+"."+str(Source_Host_IP.ip_1)+"."+str(Source_Host_IP.ip_2)+"."+str(Source_Host_IP.ip_3)+
-      " Destination_Host_IP: "+str(Destination_Host_IP.ip_0)+"."+str(Destination_Host_IP.ip_1)+"."+str(Destination_Host_IP.ip_2)+"."+str(Destination_Host_IP.ip_3))
-print("Switches passed by:")  
-Step1()
-Step2()
-Step3()
-Step4()
-Step5()
+
+def Routing_Algorithm(Source_Host_IP,Destination_Host_IP):
+    global Port_Path
+    global Routing_Path
+    print("Source_Host_IP: "+str(Source_Host_IP.ip_0)+
+      "."+str(Source_Host_IP.ip_1)+
+      "."+str(Source_Host_IP.ip_2)+
+      "."+str(Source_Host_IP.ip_3)+
+      " Destination_Host_IP: "+
+      str(Destination_Host_IP.ip_0)+
+      "."+str(Destination_Host_IP.ip_1)+
+      "."+str(Destination_Host_IP.ip_2)+
+      "."+str(Destination_Host_IP.ip_3))
+    print("Switches passed by:")  
+    Step1(Source_Host_IP)
+    Step2(Destination_Host_IP)
+    Step3(Destination_Host_IP)
+    Step4(Destination_Host_IP)
+    Step5(Destination_Host_IP)
+    temp1 = Routing_Path
+    temp2 = Port_Path
+    Port_Path = []
+    Routing_Path = []
+    return temp1, temp2
+
+
+Routing_Algorithm(Source_Host_IP_Example,Destination_Host_IP_Example)
+
+#=============================Flow classification============================================
+seen_list = []
+_fh1 = Flow_Header()
+_fh1.souce = Source_Host_IP_Example
+_fh1.destination = Destination_Host_IP_Example
+_fh1.routingresult = Routing_Algorithm(_fh1.souce, _fh1.destination)
+seen_list.append(_fh1)
+_fh_manual = Flow_Header()
+def Have_Seen(_fh):
+    for i in range(len(seen_list)):
+        if _fh.souce.ip_0 == _fh1.souce.ip_0\
+        and _fh.souce.ip_1 == _fh1.souce.ip_1\
+        and _fh.souce.ip_2 == _fh1.souce.ip_2\
+        and _fh.souce.ip_3 == _fh1.souce.ip_3\
+        and _fh.destination.ip_0 == _fh1.destination.ip_0\
+        and _fh.destination.ip_1 == _fh1.destination.ip_1\
+        and _fh.destination.ip_2 == _fh1.destination.ip_2\
+        and _fh.destination.ip_3 == _fh1.destination.ip_3:
+            return seen_list[i]
+    return 0
+    
+Example_Max_Port_Weight = 50
+Example_Min_Port_Weight = 20
+Example_Max_Port = 0
+Example_Min_Port = 1
+    
+Incoming_list = [_fh1]
+print("Enter flow number:")
+flow_num = int(input())
+for i in range(flow_num):
+    _fh = Flow_Header()
+    print("Enter Souce IP:")
+    souceip = input().split(".")
+    print("Enter Destination IP:")
+    destinationip = input().split(".")
+    _fh.souce.ip_0 = int(souceip[0])
+    _fh.souce.ip_1 = int(souceip[1])
+    _fh.souce.ip_2 = int(souceip[2])
+    _fh.souce.ip_3 = int(souceip[3])
+    _fh.destination.ip_0 = int(destinationip[0])
+    _fh.destination.ip_1 = int(destinationip[1])
+    _fh.destination.ip_2 = int(destinationip[2])
+    _fh.destination.ip_3 = int(destinationip[3])
+    print("Enter port:")
+    _fh.sentport = int(input())
+    print("Enter flow weight:")
+    _fh.size = int(input())
+    
+    
+for i in range(len(Incoming_list)):
+    if Have_Seen(Incoming_list[i]):
+        print("We find a match!")
+        Incoming_list[i].routingresult = Have_Seen(Incoming_list[i]).routingresult
+        Incoming_list[i].sentflag = True
+    else:
+        Incoming_list[i].routingresult = Routing_Algorithm(Incoming_list[i].souce, Incoming_list[i].destination)
+        seen_list.append(Incoming_list[i])
+        Incoming_list[i].sentflag = True
+End_flag = False
+for i in range(0,3):
+    D = Example_Max_Port_Weight - Example_Min_Port_Weight
+    for j in range(len(Incoming_list)):
+        if Incoming_list[j].size <= D:
+            Incoming_list[j].sentport = Example_Min_Port
+            print("rearranged!")
+            End_flag = True
+            break
+    if End_flag == True:
+        break
+    
+'''Test Data
+1
+10.2.0.3
+10.2.1.3
+0
+10
+'''
+
+
+
+
+
+
+
+ 
