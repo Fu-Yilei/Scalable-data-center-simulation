@@ -287,13 +287,13 @@ print()
 
 Source_Host_IP_Example = IP_Address()
 Source_Host_IP_Example.ip_0 = 10
-Source_Host_IP_Example.ip_1 = 2
-Source_Host_IP_Example.ip_2 = 0
-Source_Host_IP_Example.ip_3 = 3
+Source_Host_IP_Example.ip_1 = 0
+Source_Host_IP_Example.ip_2 = 1
+Source_Host_IP_Example.ip_3 = 2
 Destination_Host_IP_Example = IP_Address()
 Destination_Host_IP_Example.ip_0 = 10
 Destination_Host_IP_Example.ip_1 = 2
-Destination_Host_IP_Example.ip_2 = 1
+Destination_Host_IP_Example.ip_2 = 0
 Destination_Host_IP_Example.ip_3 = 3
 Routing_Path = []
 Port_Path = []
