@@ -534,7 +534,7 @@ for i in range(0,3):
     for j in range(len(Incoming_list)):
         if Incoming_list[j].size <= D:
             Incoming_list[j].sentport = Example_Min_Port
-            print("rearranged!")
+            print("rearranged! Original Port is:", Example_Max_Port, "New Port is:",Incoming_list[j].sentport)
             End_flag = True
             break
     if End_flag == True:
