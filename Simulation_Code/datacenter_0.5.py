@@ -295,6 +295,18 @@ Destination_Host_IP_Example.ip_0 = 10
 Destination_Host_IP_Example.ip_1 = 2
 Destination_Host_IP_Example.ip_2 = 0
 Destination_Host_IP_Example.ip_3 = 3
+'''
+Source_Host_IP_Example = IP_Address()
+Source_Host_IP_Example.ip_0 = 10
+Source_Host_IP_Example.ip_1 = 2
+Source_Host_IP_Example.ip_2 = 0
+Source_Host_IP_Example.ip_3 = 3
+Destination_Host_IP_Example = IP_Address()
+Destination_Host_IP_Example.ip_0 = 10
+Destination_Host_IP_Example.ip_1 = 2
+Destination_Host_IP_Example.ip_2 = 1
+Destination_Host_IP_Example.ip_3 = 3
+'''
 Routing_Path = []
 Port_Path = []
 def Step1(Source_Host_IP):
@@ -318,7 +330,6 @@ def Step1(Source_Host_IP):
 def Step2(Destination_Host_IP):
     for n in range(K*4):
         if switchs[n].state == 1:
-
             for i in range(len(lower_pod_tables)):
                 #print(Destination_Host_IP.ip_3 , lower_pod_tables[i].SuffixTable.suffix.ip_3)
                 if switchs[n].ip.ip_1 == lower_pod_tables[i].SuffixTable.SwitchAdress.ip_1 \
@@ -340,7 +351,9 @@ def Step2(Destination_Host_IP):
 
 
 #Step3
+Skip = 0
 def Step3(Destination_Host_IP):
+    global Skip
     for n in range(K*4):
         if switchs[n].state == 2:
             for i in range(len(upper_pod_tables_prefix)):                
@@ -348,8 +361,9 @@ def Step3(Destination_Host_IP):
                 and switchs[n].ip.ip_2 == upper_pod_tables_prefix[i].PrefixTable.SwitchAdress.ip_2\
                 and Destination_Host_IP.ip_3 == upper_pod_tables_prefix[i].PrefixTable.prefix.ip_3:
                     for p in range(K*4):
-                        if switchs[p].ip.ip_2 == upper_pod_tables_prefix[i].PrefixTable.port \
-                        and switchs[p].ip.ip_1 == upper_pod_tables_prefix[i].PrefixTable.SwitchAdress.ip_1:
+                        if switchs[p].ip.ip_1 == Destination_Host_IP.ip_1:
+                        #switchs[p].ip.ip_2 == upper_pod_tables_prefix[i].PrefixTable.port \
+                        #and switchs[p].ip.ip_1 == upper_pod_tables_prefix[i].PrefixTable.SwitchAdress.ip_1:
                             switchs[p].state = 4
                             '''
                             Routing_Path.append(switchs[p])
@@ -359,14 +373,17 @@ def Step3(Destination_Host_IP):
                                   "."+str(switchs[p].ip.ip_2)+
                                   "."+str(switchs[p].ip.ip_3)+
                                   "Port:", upper_pod_tables_prefix[i].PrefixTable.port)
-                            return'''
-                            Step5(Destination_Host_IP)
+                            return
+                            '''
+                            Routing_Path.append(switchs[p])
+                            Port_Path.append(switchs[p].ip.ip_2)
+                            Skip = 1
+                            return
             for i in range(len(upper_pod_tables_suffix)):                
                 if switchs[n].ip.ip_1 == upper_pod_tables_suffix[i].SuffixTable.SwitchAdress.ip_1 \
                 and switchs[n].ip.ip_2 == upper_pod_tables_suffix[i].SuffixTable.SwitchAdress.ip_2\
                 and Destination_Host_IP.ip_3 == upper_pod_tables_suffix[i].SuffixTable.suffix.ip_3:
                     for m in range(int((K/2)**2)):
-                        #print(core_switchs[m].ip.ip_2, upper_pod_tables_suffix[i].SuffixTable.SwitchAdress.ip_2 -1)
                         if core_switchs[m].ip.ip_2 == upper_pod_tables_suffix[i].SuffixTable.SwitchAdress.ip_2 -1 \
                         and core_switchs[m].ip.ip_3 == upper_pod_tables_suffix[i].SuffixTable.port -1:           
                             core_switchs[m].state = 3
@@ -446,6 +463,7 @@ def Step5(Destination_Host_IP):
 def Routing_Algorithm(Source_Host_IP,Destination_Host_IP):
     global Port_Path
     global Routing_Path
+    global Skip
     print("Source_Host_IP: "+str(Source_Host_IP.ip_0)+
       "."+str(Source_Host_IP.ip_1)+
       "."+str(Source_Host_IP.ip_2)+
@@ -459,8 +477,12 @@ def Routing_Algorithm(Source_Host_IP,Destination_Host_IP):
     Step1(Source_Host_IP)
     Step2(Destination_Host_IP)
     Step3(Destination_Host_IP)
-    Step4(Destination_Host_IP)
-    Step5(Destination_Host_IP)
+    if Skip == 1:
+        Step5(Destination_Host_IP)
+        Skip = 0
+    else:
+        Step4(Destination_Host_IP)
+        Step5(Destination_Host_IP)
     temp1 = Routing_Path
     temp2 = Port_Path
     Port_Path = []
@@ -497,7 +519,7 @@ Example_Max_Port = 0
 Example_Min_Port = 1
     
 Incoming_list = [_fh1]
-print("Enter flow number:")
+print("Enter the number of packets:")
 flow_num = int(input())
 for i in range(flow_num):
     _fh = Flow_Header()
@@ -541,8 +563,12 @@ for i in range(0,3):
         break
     
 '''Test Data
-1
+2
+10.0.1.2
 10.2.0.3
+0
+10
+10.0.1.3
 10.2.1.3
 0
 10
